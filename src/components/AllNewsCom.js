@@ -15,7 +15,7 @@ export default class AllNewsCom extends Component {
     };
   }
 componentDidMount(){
-  axios.get(`https://newsapi.org/v2/everything?q=apple&from=2022-02-21&to=2022-02-21&sortBy=popularity&apiKey=74f7e24d89a64630a7e5ac7a9fbef5a7&page=2`)
+  axios.get(`https://newsapi.org/v2/everything?q=apple&from=2022-02-21&to=2022-02-21&sortBy=popularity&apiKey=74f7e24d89a64630a7e5ac7a9fbef5a7&pageSize=12`)
   .then(res => {
     const data = res.data;
     console.log(data);
@@ -24,9 +24,24 @@ componentDidMount(){
 }
 PrevClick=()=>{
   console.log("PreviousCLick");
+  axios.get(`https://newsapi.org/v2/everything?q=apple&from=2022-02-21&to=2022-02-21&sortBy=popularity&apiKey=74f7e24d89a64630a7e5ac7a9fbef5a7&page=${this.state.page}&pageSize=12`)
+  .then(res => {
+    const data = res.data;
+    // console.log(data);
+    this.setState({ 
+      page:this.state.page-1,
+      articles:data.articles });
+  })
 }
 NextClick=()=>{
-  console.log("NextClick");
+  axios.get(`https://newsapi.org/v2/everything?q=apple&from=2022-02-21&to=2022-02-21&sortBy=popularity&apiKey=74f7e24d89a64630a7e5ac7a9fbef5a7&page=${this.state.page}&pageSize=12`)
+  .then(res => {
+    const data = res.data;
+    // console.log(data);
+    this.setState({ 
+      page:this.state.page+1,
+      articles:data.articles });
+  })
 }
   render() {
 
@@ -39,10 +54,10 @@ NextClick=()=>{
             return (
               <Col key={item.url}>
                 <SIngleNews 
-                  description={item.description.slice(0,30)}
-                  author={item.title.slice(0,15)}
+                  description={item.description?.slice(0,30)}
+                  author={item.title?.slice(0,15)}
                   imgUrl={item.urlToImage}
-                  source={item.source.name}
+                  source={item.source?.name}
                   url={item.url}
                 />
               </Col>
@@ -51,7 +66,7 @@ NextClick=()=>{
         </Row>
        
         <div className="d-flex justify-content-between my-2">
-        <Button variant="dark" onClick={this.PrevClick}>Previous</Button>
+        <Button disabled={this.state.page<=1?true:false}  variant="dark" onClick={this.PrevClick}>Previous</Button>
          <Button variant="dark"onClick={this.NextClick}>Next</Button>
         </div>
       

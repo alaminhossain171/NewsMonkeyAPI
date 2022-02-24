@@ -3,15 +3,18 @@ import { Card } from "react-bootstrap";
 // import Badge from 'react-bootstrap/Badge'
 export default class SIngleNews extends Component {
   render() {
-    const { author, imgUrl, url, source, description,publishedAt } = this.props;
+    const { author, imgUrl, url, source, description, publishedAt } =
+      this.props;
     return (
       <>
         <Card style={{ marginBottom: "20px" }}>
-        <span class="position-absolute top-0  translate-middle badge rounded-pill bg-danger" style={{ left:'88%',zIndex:'1' }}>
-    {source}
- 
-  </span>
-          <div style={{ height: "200px" }}>
+          <span
+            className="position-absolute top-0  translate-middle badge rounded-pill bg-danger"
+            style={{ left: "88%", zIndex: "1" }}
+          >
+            {source}
+          </span>
+          <div>
             <Card.Img variant="top" className="img-fluid" src={imgUrl} />
           </div>
           <Card.Body>
@@ -21,7 +24,9 @@ export default class SIngleNews extends Component {
               <small>{description}</small>
             </Card.Text>
             <footer className="blockquote-footer">
-              <cite title="Source Title">date: {new Date(publishedAt).toGMTString()}</cite>
+              <cite title="Source Title">
+                date: {new Date(publishedAt).toGMTString()}
+              </cite>
             </footer>
             <a
               className="btn btn-dark"

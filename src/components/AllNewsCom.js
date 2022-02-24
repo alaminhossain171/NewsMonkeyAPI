@@ -22,12 +22,17 @@ export default class AllNewsCom extends Component {
       loading: false,
       page: 1,
     };
+    document.title=this.capitalizeFirstLetter(this.props.category);
   }
-  componentDidMount() {
+capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  handleUpdate = () => {
     this.setState({ loading: true });
     axios
       .get(
-        `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=1c09050c56c749fab0ffdd6de946792f&pageSize=${this.props.pageSize}`
+        `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=1c09050c56c749fab0ffdd6de946792f&page=${this.state.page}&pageSize=${this.props.pageSize}`
       )
       .then((res) => {
         const data = res.data;
@@ -38,23 +43,15 @@ export default class AllNewsCom extends Component {
           loading: false,
         });
       });
+  };
+  componentDidMount() {
+    this.handleUpdate();
+ 
   }
   PrevClick = () => {
-    console.log("PreviousCLick");
-    this.setState({ loading: true });
-    axios
-      .get(
-        `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=1c09050c56c749fab0ffdd6de946792f&page=${this.state.page}&pageSize=${this.props.pageSize}`
-      )
-      .then((res) => {
-        const data = res.data;
-        // console.log(data);
-        this.setState({
-          page: this.state.page - 1,
-          articles: data.articles,
-          loading: false,
-        });
-      });
+  
+    this.setState({ page: this.state.page - 1 });
+    this.handleUpdate();
   };
   NextClick = () => {
     if (
@@ -62,26 +59,15 @@ export default class AllNewsCom extends Component {
       Math.ceil(this.state.totalResults / this.state.page)
     ) {
     } else {
-      this.setState({ loading: true });
-      axios
-        .get(
-          `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=1c09050c56c749fab0ffdd6de946792f&page=${this.state.page}&pageSize=${this.props.pageSize}`
-        )
-        .then((res) => {
-          const data = res.data;
-          // console.log(data);
-          this.setState({
-            page: this.state.page + 1,
-            articles: data.articles,
-            loading: false,
-          });
-        });
+      
+      this.setState({ page: this.state.page + 1 });
+      this.handleUpdate();
     }
   };
   render() {
     return (
       <Container>
-        <h1 className="my-3 text-center">News Monkey top Headline</h1>
+        <h1 className="my-4 text-center">{this.capitalizeFirstLetter(this.props.category)} Top Headline</h1>
         {this.state.loading && <Spinner />}
 
         <Row xs={1} md={4} lg={4}>
@@ -90,7 +76,7 @@ export default class AllNewsCom extends Component {
               return (
                 <Col key={item.url}>
                   <SIngleNews
-                  publishedAt={item.publishedAt}
+                    publishedAt={item.publishedAt}
                     description={item.description?.slice(0, 30)}
                     author={item.title?.slice(0, 25)}
                     imgUrl={

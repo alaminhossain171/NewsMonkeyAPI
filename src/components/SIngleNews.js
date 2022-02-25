@@ -8,12 +8,14 @@ export default class SIngleNews extends Component {
     return (
       <>
         <Card style={{ marginBottom: "20px" }}>
-          <span
-            className="position-absolute top-0  translate-middle badge rounded-pill bg-danger"
-            style={{ left: "88%", zIndex: "1" }}
-          >
-            {source}
-          </span>
+        <div className="d-flex justify-content-end position-absolute end-0">
+        <span
+        className=" badge rounded-pill bg-danger"
+   
+      >
+        {source}
+      </span>
+        </div>
           <div>
             <Card.Img variant="top" className="img-fluid" src={imgUrl} />
           </div>

@@ -6,7 +6,7 @@ import axios from "axios";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
-// document.title=capitalizeFirstLetter(props.category);
+
 const AllNewsCom = (props) => {
   const [articles, setArticles] = useState([]);
   const [loading, setloading] = useState(true);
@@ -35,16 +35,18 @@ const AllNewsCom = (props) => {
 
   
   useEffect(() => {
+    document.title=capitalizeFirstLetter(props.category);
     handleUpdate();
   },[]);
 
   const fetchMoreData = () => {
+    
     setpage(page + 1);
-
     axios
       .get(
-        `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`
+        `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apiKey}&page=${page+1}&pageSize=${props.pageSize}`
       )
+      
       .then((res) => {
         const data = res.data;
         console.log(data.totalResults);

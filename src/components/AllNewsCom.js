@@ -1,108 +1,92 @@
-import React, { Component } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import SIngleNews from "./SIngleNews";
 import axios from "axios";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
+// document.title=capitalizeFirstLetter(props.category);
+const AllNewsCom = (props) => {
+  const [articles, setArticles] = useState([]);
+  const [loading, setloading] = useState(true);
+  const [page, setpage] = useState(1);
+  const [totalResults, settotalResults] = useState(0);
 
-export default class AllNewsCom extends Component {
-  static defaultProps = {
-    category: "science",
-    pageSize: 5,
-  };
-  static propTypes = {
-    category: PropTypes.string,
-    pageSize: PropTypes.number,
-  };
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      articles: [],
-      loading: true,
-      page: 1,
-      totalResults:0
-    };
-    document.title=this.capitalizeFirstLetter(this.props.category);
-  }
-capitalizeFirstLetter(string) {
+  const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  };
 
-  handleUpdate = () => {
-   
-    this.setState({ loading: true });
-    this.props.setProgress(10);
+  const handleUpdate = () => {
+    setloading(true);
+
     axios
       .get(
-        `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`
+      )
+      .then((res) => {
+        const data = res.data;
+        // console.log(data.totalResults);
+        setArticles(data.articles);
+        settotalResults(data.totalResults);
+        setloading(false);
+      });
+  };
+
+  
+  useEffect(() => {
+    handleUpdate();
+  },[]);
+
+  const fetchMoreData = () => {
+    setpage(page + 1);
+
+    axios
+      .get(
+        `https://newsapi.org/v2/top-headlines?country=in&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pageSize=${props.pageSize}`
       )
       .then((res) => {
         const data = res.data;
         console.log(data.totalResults);
-        this.setState({
-          articles: data.articles,
-          totalResults: data.totalResults,
-          loading: false,
-        });
+        setArticles(articles.concat(data.articles));
+        settotalResults(data.totalResults);
       });
-      this.props.setProgress(100);
-  };
-  componentDidMount() {
-    this.handleUpdate();
- 
-  }
-  fetchMoreData = () => {
-    this.setState({ page: this.state.page + 1 });
-    axios
-    .get(
-      `https://newsapi.org/v2/top-headlines?country=in&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`
-    )
-    .then((res) => {
-      const data = res.data;
-      console.log(data.totalResults);
-      this.setState({
-        articles:this.state.articles.concat(data.articles) ,
-        totalResults: data.totalResults,
-        
-      });
-    });
   };
   // PrevClick = () => {
-  
-  //   this.setState({ page: this.state.page - 1 });
-  //   this.handleUpdate();
+
+  //   setState({ page: state.page - 1 });
+  //   handleUpdate();
   // };
 
   // NextClick = () => {
   //   if (
-  //     this.state.page + 1 >
-  //     Math.ceil(this.state.totalResults / this.state.page)
+  //     state.page + 1 >
+  //     Math.ceil(state.totalResults / state.page)
   //   ) {
   //   } else {
-      
-  //     this.setState({ page: this.state.page + 1 });
-  //     this.handleUpdate();
+
+  //     setState({ page: state.page + 1 });
+  //     handleUpdate();
   //   }
   // };
-  render() {
-    return (
-      <>
-        <h1 className="my-4 text-center">{this.capitalizeFirstLetter(this.props.category)} Top Headline</h1>
-        {this.state.loading && <Spinner />}
-        <InfiniteScroll
-          dataLength={this.state.articles.length}
-          next={this.fetchMoreData}
-          hasMore={this.state.articles.length !==this.state.totalResults}
-          loader={<Spinner />}
-        >
+
+  return (
+    <>
+      <h1 className="my-4 text-center">
+        {capitalizeFirstLetter(props.category)} Top Headline
+      </h1>
+      {loading && <Spinner />}
+      <InfiniteScroll
+        dataLength={articles.length}
+        next={fetchMoreData}
+        hasMore={articles.length !== totalResults}
+        loader={<Spinner />}
+      >
         <Container className="mt-3">
-        <Row xs={1} md={2} lg={4}>
-        {/* !this.state.loading && */}
-       
-          {
-            this.state.articles.map((item) => {
+          <Row xs={1} md={2} lg={4}>
+            {/* !state.loading && */}
+
+            {articles.map((item) => {
               return (
                 <Col key={item.url}>
                   <SIngleNews
@@ -120,30 +104,37 @@ capitalizeFirstLetter(string) {
                 </Col>
               );
             })}
-            
-        </Row>
+          </Row>
         </Container>
-        </InfiniteScroll>
-        {/* <div className="d-flex justify-content-between my-2">
+      </InfiniteScroll>
+      {/* <div className="d-flex justify-content-between my-2">
           <Button
-            disabled={this.state.page <= 1 ? true : false}
+            disabled={state.page <= 1 ? true : false}
             variant="dark"
-            onClick={this.PrevClick}
+            onClick={PrevClick}
           >
             Previous
           </Button>
           <Button
             disabled={
-              this.state.page + 1 >
-              Math.ceil(this.state.totalResults / this.props.pageSize)
+              state.page + 1 >
+              Math.ceil(state.totalResults / props.pageSize)
             }
             variant="dark"
-            onClick={this.NextClick}
+            onClick={NextClick}
           >
             Next
           </Button>
         </div> */}
-      </>
-    );
-  }
-}
+    </>
+  );
+};
+AllNewsCom.defaultProps = {
+  category: "science",
+  pageSize: 5,
+};
+AllNewsCom.propTypes = {
+  category: PropTypes.string,
+  pageSize: PropTypes.number,
+};
+export default AllNewsCom;

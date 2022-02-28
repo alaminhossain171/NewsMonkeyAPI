@@ -1,54 +1,51 @@
-import React, { Component } from "react";
+import React from "react";
 import AllNewsCom from "./components/AllNewsCom";
 import Header from "./components/Header";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import LoadingBar from 'react-top-loading-bar'
+// import LoadingBar from 'react-top-loading-bar'
 
-export default class App extends Component {
+const App=()=> {
 
 
-  pageSize=8;
-  apiKey=process.env.REACT_APP_BLOG_API;
-  state={
-    progress:0
-  }
-  setProgress=(progress)=>{
-    console.log(progress)
-    this.setState({progress:progress})
-     }
-  render() {
+  let pageSize=8;
+  let apiKey=process.env.REACT_APP_BLOG_API;
+  // state={
+  //   progress:0
+  // }
+  // setProgress=(progress)=>{
+  //   console.log(progress)
+  //   setState({progress:progress})
+  //    }
+
     return (
       <Router>
         <Header />
-        <LoadingBar
-        color='#f11946'
-        progress={this.state.progress}
-       
-      />
+      
         <Switch>
           <Route  exact path="/">
-            <AllNewsCom setProgress={this.setProgress} apiKey={this.apiKey} pageSize={this.pageSize} category={`general`} />
+            <AllNewsCom  apiKey={apiKey} pageSize={pageSize} category={`general`} />
           </Route>
           <Route key={`business`} exact path="/business">
-            <AllNewsCom setProgress={this.setProgress} apiKey={this.apiKey} pageSize={this.pageSize} category={`business`} />
+            <AllNewsCom  apiKey={apiKey} pageSize={pageSize} category={`business`} />
           </Route>
           <Route key={`entertainment`} exact path="/entertainment">
-            <AllNewsCom setProgress={this.setProgress} apiKey={this.apiKey} pageSize={this.pageSize} category={`entertainment`} />
+            <AllNewsCom  apiKey={apiKey} pageSize={pageSize} category={`entertainment`} />
           </Route>
           <Route key={`health`} exact path="/health">
-            <AllNewsCom setProgress={this.setProgress} apiKey={this.apiKey} pageSize={this.pageSize} category={`health`} />
+            <AllNewsCom  apiKey={apiKey} pageSize={pageSize} category={`health`} />
           </Route>
           <Route key={`science`} exact path="/science">
-            <AllNewsCom setProgress={this.setProgress} apiKey={this.apiKey} pageSize={this.pageSize} category={`science`} />
+            <AllNewsCom  apiKey={apiKey} pageSize={pageSize} category={`science`} />
           </Route>
           <Route key={`sports`} exact path="/sports">
-            <AllNewsCom setProgress={this.setProgress} apiKey={this.apiKey} pageSize={this.pageSize} category={`sports`} />
+            <AllNewsCom  apiKey={apiKey} pageSize={pageSize} category={`sports`} />
           </Route>
           <Route key={`technology`} exact path="/technology">
-            <AllNewsCom setProgress={this.setProgress} apiKey={this.apiKey} pageSize={this.pageSize} category={`technology`} />
+            <AllNewsCom  apiKey={apiKey} pageSize={pageSize} category={`technology`} />
           </Route>
         </Switch>
       </Router>
     );
-  }
+  
 }
+export default App;

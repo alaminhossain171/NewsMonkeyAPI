@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import { Card } from "react-bootstrap";
 // import Badge from 'react-bootstrap/Badge'
-export default class SIngleNews extends Component {
-  render() {
+const SIngleNews=(props)=>{
+
     const { author, imgUrl, url, source, description, publishedAt } =
-      this.props;
+      props;
     return (
       <>
         <Card style={{ marginBottom: "20px" }}>
@@ -42,5 +42,6 @@ export default class SIngleNews extends Component {
         </Card>
       </>
     );
-  }
+  
 }
+export default SIngleNews
